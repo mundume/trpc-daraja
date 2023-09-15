@@ -2,6 +2,10 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter } from "@/server";
 
+export const config = {
+  runtime: "edge",
+};
+
 const handler = (req: Request) => {
   return fetchRequestHandler({
     endpoint: "/api/trpc",
