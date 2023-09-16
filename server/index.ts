@@ -6,19 +6,19 @@ type MpesaApiResponseToken = {
   expires_in: string;
 };
 
-type MpesaStkRequestBody = {
-  BusinessShortCode?: string;
-  Password: string;
-  Timestamp: string;
-  TransactionType: "CustomerBuyGoodsOnline" | "CustomerPayBillOnline";
-  Amount?: string;
-  PartyA?: string;
-  PartyB?: string;
-  PhoneNumber?: string;
-  CallBackURL: string;
-  AccountReference: string;
-  TransactionDesc: string;
-};
+// type MpesaStkRequestBody = {
+//   BusinessShortCode?: string;
+//   Password: string;
+//   Timestamp: string;
+//   TransactionType: "CustomerBuyGoodsOnline" | "CustomerPayBillOnline";
+//   Amount?: string;
+//   PartyA?: string;
+//   PartyB?: string;
+//   PhoneNumber?: string;
+//   CallBackURL: string;
+//   AccountReference: string;
+//   TransactionDesc: string;
+// };
 
 function generateTimestamp() {
   const date = new Date();
@@ -74,14 +74,14 @@ export const appRouter = router({
       console.log(stk_password);
 
       //REQUEST BODY
-      const requestBody: MpesaStkRequestBody = {
+      const requestBody = {
         BusinessShortCode: shortcode,
         Password: stk_password,
         Timestamp: timestamp,
         TransactionType: "CustomerBuyGoodsOnline",
         Amount: opts.input.amount,
         PartyA: opts.input.phoneNumber,
-        PartyB: shortcode,
+        PartyB: shortcode!,
         PhoneNumber: "254114109808",
         CallBackURL: "https://yourwebsite.co.ke/callbackurl",
         AccountReference: "account",
