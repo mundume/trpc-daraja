@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { publicProcedure, router } from "./trpc";
 import { string, z } from "zod";
 
@@ -82,7 +83,7 @@ export const appRouter = router({
         PartyA: input.phoneNumber,
         PartyB: shortcode,
         PhoneNumber: reciverNumber,
-        CallBackURL: "https://trpc-daraja.vercel.app/api/stkPush",
+        CallBackURL: "https://trpc-daraja.vercel.app/api/trpc/stkPushCallback",
         AccountReference: "account",
         TransactionDesc: "test",
       };
@@ -106,13 +107,19 @@ export const appRouter = router({
       }
       if (response.ok) {
         console.log(`hurray pleber ${response.statusText}`);
+        const j = await response.json();
+        console.log(j);
+        const pleb = await caller.stkPushCallback();
+        console.log(pleb);
+        return Response.json("success", {
+          status: 200,
+        });
       }
     }),
-  stkPushCallback: publicProcedure.mutation(async ({ ctx }) => {
-    console.log(ctx);
-    return Response.json("success", {
-      status: 200,
-    });
+  stkPushCallback: publicProcedure.mutation(async (opts) => {
+    const p = opts.ctx as Request;
+    const l = opts.ctx as Response;
+    console.log(p.body, l.body);
   }),
 });
 
