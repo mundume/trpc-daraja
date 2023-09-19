@@ -6,19 +6,19 @@ type MpesaApiResponseToken = {
   expires_in: string;
 };
 
-// type MpesaStkRequestBody = {
-//   BusinessShortCode?: string;
-//   Password: string;
-//   Timestamp: string;
-//   TransactionType: "CustomerBuyGoodsOnline" | "CustomerPayBillOnline";
-//   Amount?: string;
-//   PartyA?: string;
-//   PartyB?: string;
-//   PhoneNumber?: string;
-//   CallBackURL: string;
-//   AccountReference: string;
-//   TransactionDesc: string;
-// };
+type MpesaStkRequestBody = {
+  BusinessShortCode: string;
+  Password: string;
+  Timestamp: string;
+  TransactionType: "CustomerBuyGoodsOnline" | "CustomerPayBillOnline";
+  Amount: string;
+  PartyA: string;
+  PartyB: string;
+  PhoneNumber: string;
+  CallBackURL: string;
+  AccountReference: string;
+  TransactionDesc: string;
+};
 
 function generateTimestamp() {
   const date = new Date();
@@ -35,10 +35,9 @@ function generateTimestamp() {
 }
 
 export const appRouter = router({
-  getTodos: publicProcedure.query(async () => {
+  getTodos: publicProcedure.query(async (ctx) => {
     const consumerKey = process.env.CONSUMER_KEY!;
     const consumerSecret = process.env.CONSUMER_SECRET!;
-
     const url = process.env.GENERATETOKENURL!;
 
     const encodedCredentials = Buffer.from(
@@ -61,10 +60,11 @@ export const appRouter = router({
   }),
   stkPush: publicProcedure
     .input(z.object({ amount: z.string(), phoneNumber: z.string() }))
-    .mutation(async (opts) => {
+    .mutation(async ({ input }) => {
       const url = process.env.STKPUSHURL!;
+      const reciverNumber = process.env.PHONENUMBER!;
       const passkey = process.env.PASSKEY!;
-      const shortcode = process.env.SHORTCODE;
+      const shortcode = process.env.SHORTCODE!;
       const caller = appRouter.createCaller({});
       const token = await caller.getTodos();
       const timestamp = generateTimestamp();
@@ -73,17 +73,16 @@ export const appRouter = router({
       ).toString("base64");
       console.log(stk_password);
 
-      //REQUEST BODY
-      const requestBody = {
+      const requestBody: MpesaStkRequestBody = {
         BusinessShortCode: shortcode,
         Password: stk_password,
         Timestamp: timestamp,
-        TransactionType: "CustomerBuyGoodsOnline",
-        Amount: opts.input.amount,
-        PartyA: opts.input.phoneNumber,
-        PartyB: shortcode!,
-        PhoneNumber: "254114109808",
-        CallBackURL: "https://yourwebsite.co.ke/callbackurl",
+        TransactionType: "CustomerPayBillOnline",
+        Amount: input.amount,
+        PartyA: input.phoneNumber,
+        PartyB: shortcode,
+        PhoneNumber: reciverNumber,
+        CallBackURL: "https://trpc-daraja.vercel.app/api/stkPush",
         AccountReference: "account",
         TransactionDesc: "test",
       };
@@ -99,13 +98,22 @@ export const appRouter = router({
       });
       if (!response.ok) {
         console.log(response.statusText);
-        return Response.json("An error occurred", { status: 500 });
+        console.log(response.json());
+
+        return Response.json("An error occurred", {
+          status: response.status,
+        });
       }
       if (response.ok) {
-        console.log(`hurray pleb ${response.statusText}`);
-        return Response.json(response);
+        console.log(`hurray pleber ${response.statusText}`);
       }
     }),
+  stkPushCallback: publicProcedure.mutation(async ({ ctx }) => {
+    console.log(ctx);
+    return Response.json("success", {
+      status: 200,
+    });
+  }),
 });
 
 export type AppRouter = typeof appRouter;
