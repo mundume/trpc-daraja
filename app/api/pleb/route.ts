@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 // @ts-nocheck
-export async function POST(req: Request, res: Response) {
+
+export async function POST(req: any, res: any) {
   const callbackData = await req.body!;
 
   const result_code = callbackData.stkCallback.ResultCode;
@@ -18,20 +19,25 @@ export async function POST(req: Request, res: Response) {
   const body = req.body!.Body.stkCallback.CallbackMetadata;
 
   // Get amount
-  const amountObj = body.Item.find((obj) => obj.Name === "Amount");
+  const amountObj = body.Item.find((obj: any) => obj.Name === "Amount");
   const amount = amountObj.Value;
 
   // Get Mpesa code
-  const codeObj = body.Item.find((obj) => obj.Name === "MpesaReceiptNumber");
+  const codeObj = body.Item.find(
+    (obj: any) => obj.Name === "MpesaReceiptNumber"
+  );
   const mpesaCode = codeObj.Value;
 
   // Get phone number
-  const phoneNumberObj = body.Item.find((obj) => obj.Name === "PhoneNumber");
+  const phoneNumberObj = body.Item.find(
+    (obj: any) => obj.Name === "PhoneNumber"
+  );
   const phone = phoneNumberObj.Value;
 
   // Save the variables to a file or database, etc.
   // ...
 
   // Return a success response to mpesa
+  console.log({ amount, mpesaCode, phone });
   return NextResponse.json({ amount, mpesaCode, phone });
 }
