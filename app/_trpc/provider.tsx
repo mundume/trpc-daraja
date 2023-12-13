@@ -12,6 +12,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpLink({
+          //
           url: absoluteUrl("/api/trpc"),
         }),
       ],
