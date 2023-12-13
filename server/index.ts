@@ -83,7 +83,7 @@ export const appRouter = router({
         PartyA: input.phoneNumber,
         PartyB: shortcode,
         PhoneNumber: reciverNumber,
-        CallBackURL: "https://63b6-154-159-254-251.ngrok-free.app/api/pleb",
+        CallBackURL: "https://63b6-154-159-254-251.ngrok-free.app/api/pleb", //i'm using ngrok to tunnel request but on production you can use your VERCEL_URL/api/pleb-(/api/callback would be better)
         AccountReference: "account",
         TransactionDesc: "test",
       };
