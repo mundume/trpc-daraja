@@ -1,43 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-// @ts-nocheck
+import { NextResponse } from "next/server";
 
-export async function POST(req: any, res: any) {
-  const callbackData = await req.body!;
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const resultCode = body.Body.stkCallback.ResultCode;
+    if (resultCode !== 0) {
+      console.log(body);
+      return NextResponse.json(body);
+    }
+    console.log(body);
 
-  const result_code = callbackData.stkCallback.ResultCode;
-  if (result_code !== 0) {
-    // If the result code is not 0, there was an error
-    const error_message = callbackData.Body.stkCallback.ResultDesc;
-    const response_data = {
-      ResultCode: result_code,
-      ResultDesc: error_message,
-    };
-    return res.json(response_data);
+    //save the data to a db or persist it to local storage
+    return NextResponse.json(body);
+  } catch (error) {
+    throw new Error(error as string);
   }
-
-  // If the result code is 0, the transaction was completed
-  const body = req.body!.Body.stkCallback.CallbackMetadata;
-
-  // Get amount
-  const amountObj = body.Item.find((obj: any) => obj.Name === "Amount");
-  const amount = amountObj.Value;
-
-  // Get Mpesa code
-  const codeObj = body.Item.find(
-    (obj: any) => obj.Name === "MpesaReceiptNumber"
-  );
-  const mpesaCode = codeObj.Value;
-
-  // Get phone number
-  const phoneNumberObj = body.Item.find(
-    (obj: any) => obj.Name === "PhoneNumber"
-  );
-  const phone = phoneNumberObj.Value;
-
-  // Save the variables to a file or database, etc.
-  // ...
-
-  // Return a success response to mpesa
-  console.log({ amount, mpesaCode, phone });
-  return NextResponse.json({ amount, mpesaCode, phone });
 }

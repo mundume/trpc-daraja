@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { publicProcedure, router } from "./trpc";
 import { string, z } from "zod";
 
@@ -78,12 +78,12 @@ export const appRouter = router({
         BusinessShortCode: shortcode,
         Password: stk_password,
         Timestamp: timestamp,
-        TransactionType: "CustomerPayBillOnline",
+        TransactionType: "CustomerBuyGoodsOnline",
         Amount: input.amount,
         PartyA: input.phoneNumber,
         PartyB: shortcode,
         PhoneNumber: reciverNumber,
-        CallBackURL: "https://trpc-daraja.vercel.app/api/trpc/stkPushCallback",
+        CallBackURL: "https://63b6-154-159-254-251.ngrok-free.app/api/pleb",
         AccountReference: "account",
         TransactionDesc: "test",
       };
@@ -106,21 +106,11 @@ export const appRouter = router({
         });
       }
       if (response.ok) {
-        console.log(`hurray pleber ${response.statusText}`);
-        const j = await response.json();
-        console.log(j);
-        const pleb = await caller.stkPushCallback();
-        console.log(pleb);
-        return Response.json("success", {
-          status: 200,
+        return NextResponse.json("An error occurred", {
+          status: response.status,
         });
       }
     }),
-  stkPushCallback: publicProcedure.mutation(async (opts) => {
-    const p = opts.ctx as Request;
-    const l = opts.ctx as Response;
-    console.log(p.body, l.body);
-  }),
 });
 
 export type AppRouter = typeof appRouter;
