@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { publicProcedure, router } from "./trpc";
 import { string, z } from "zod";
+import { absoluteUrl } from "@/utils/utils";
 
 type MpesaApiResponseToken = {
   access_token: string;
@@ -83,7 +84,7 @@ export const appRouter = router({
         PartyA: input.phoneNumber,
         PartyB: shortcode,
         PhoneNumber: reciverNumber,
-        CallBackURL: "https://63b6-154-159-254-251.ngrok-free.app/api/pleb", //i'm using ngrok to tunnel request but on production you can use your VERCEL_URL/api/pleb-(/api/callback would be better)
+        CallBackURL: absoluteUrl("/api/pleb"), //i'm using ngrok to tunnel request but on production you can use your VERCEL_URL/api/pleb-(/api/callback would be better)
         AccountReference: "account",
         TransactionDesc: "test",
       };
