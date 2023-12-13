@@ -37,7 +37,7 @@ function generateTimestamp() {
 }
 
 export const appRouter = router({
-  getTodos: publicProcedure.query(async (ctx) => {
+  getToken: publicProcedure.query(async (ctx) => {
     const consumerKey = process.env.CONSUMER_KEY!;
     const consumerSecret = process.env.CONSUMER_SECRET!;
     const url = process.env.GENERATETOKENURL!;
@@ -68,7 +68,7 @@ export const appRouter = router({
       const passkey = process.env.PASSKEY!;
       const shortcode = process.env.SHORTCODE!;
       const caller = appRouter.createCaller({});
-      const token = await caller.getTodos();
+      const token = await caller.getToken();
       const timestamp = generateTimestamp();
       const stk_password = Buffer.from(
         `${shortcode}${passkey}${timestamp}`
@@ -84,7 +84,7 @@ export const appRouter = router({
         PartyA: input.phoneNumber,
         PartyB: shortcode,
         PhoneNumber: reciverNumber,
-        CallBackURL: absoluteUrl("/api/pleb"), //i'm using ngrok to tunnel request but on production you can use your VERCEL_URL/api/pleb-(/api/callback would be better)
+        CallBackURL: absoluteUrl("/api/callback"), //i'm using ngrok to tunnel request but on production you can use your VERCEL_URL/api/callback-(/api/callback would be better)
         AccountReference: "account",
         TransactionDesc: "test",
       };
