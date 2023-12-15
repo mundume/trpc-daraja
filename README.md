@@ -29,7 +29,6 @@ PASSKEY=your passkey
 SHORTCODE =your till number
 GENERATETOKENURL=https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials
 STKPUSHURL=https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
-PHONENUMBER=your phone number
 ```
 
 ## Learn More

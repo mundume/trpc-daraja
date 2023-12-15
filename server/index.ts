@@ -64,7 +64,6 @@ export const appRouter = router({
     .input(z.object({ amount: z.string(), phoneNumber: z.string() }))
     .mutation(async ({ input }) => {
       const url = process.env.STKPUSHURL!;
-      const reciverNumber = process.env.PHONENUMBER!;
       const passkey = process.env.PASSKEY!;
       const shortcode = process.env.SHORTCODE!;
       const caller = appRouter.createCaller({});

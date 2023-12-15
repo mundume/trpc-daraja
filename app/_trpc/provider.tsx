@@ -13,7 +13,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       links: [
         httpLink({
           //
-          url: absoluteUrl("/api/trpc"),
+          url: "/api/trpc",
         }),
       ],
     })

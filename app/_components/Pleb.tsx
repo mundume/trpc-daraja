@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { trpc } from "../_trpc/client";
+import { absoluteUrl } from "@/utils/utils";
 
 export default function Pleb() {
   const [amount, setAmount] = useState<string>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const getStkKit = trpc.stkPush.useMutation();
+
   async function handleClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
